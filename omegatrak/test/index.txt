@@ -1,0 +1,40 @@
+<?php 
+include "php/db_connect.php";
+
+
+?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ОмегаТрак</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <?php
+        if ($_SESSION['users'] == ''):
+    ?>
+    <div class="header">
+        <div class="header_client_section">
+            <div class="headerlogo">
+                ОМЕГА
+            </div>
+            <div class="clientData headerButton">
+                <a href="login.php">Войти</a>
+                <a href="register.php">Регистрация</a>
+            </div>        
+        </div>
+        <div class="header_section">
+            <div class="header_item headerButton"><a href="test.php">О нас</a></div>
+            <div class="header_item headerButton"><a href="#">Новости</a></div>
+            <div class="header_item headerButton"><a href="#">Контакты</a></div>
+            <div class="header_item headerButton"><a href="#">Поставщики</a></div>
+        </div>
+    </div>
+
+    <?php endif;
+    ?>
+    
+</body>
+</html>

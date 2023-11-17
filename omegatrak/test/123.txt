@@ -1,0 +1,144 @@
+<?php 
+								include "php/db_connect.php";
+
+								//получаем данные БД category users
+								$query_u = mysqli_query($mysqli, "SELECT * FROM `users`"); 
+								//$row = mysqli_fetch_assoc($query_u); 
+								$users = mysqli_fetch_all($query_u);
+								//$id_users = $row['id'];
+								//print_r($row['id']);
+								
+								//получаем данные БД category
+								$category = mysqli_query($mysqli, "SELECT * FROM `category`");
+								$category = mysqli_fetch_all($category);
+								//print_r($category);
+
+								//получаем данные БД booking
+								$query = mysqli_query($mysqli, "SELECT * FROM `booking`"); 
+								$query = mysqli_fetch_all($query);
+								//$query_u = mysqli_fetch_all($query_u);
+								//print_r($query_u);
+								
+								if ($row['access'] == 1){
+									
+									foreach ($query as $quer){
+										 
+							?>
+								<tr>
+									<td><?= $quer[0] /*Номер*/?></td>
+									<td><?foreach ($users as $user){ 
+										if ($quer[1] == $user[0])
+										echo $user[1], ' ',$user[2], ' ',$user[3];} /*ФИО*/ ?></td>
+									<td><?= $quer[2] /*Номер автомобиля*/?></td>
+									<td><?= $quer[3] /*Автомобиль*/?></td>
+									
+									<td><?= $quer[7] /*Дата*/?></td>
+									<td><?= $quer[6] /*Кол-во суток*/?></td>
+							<?php 
+								foreach ($category as $cat){
+							?>
+								<? if ($cat[0] == $quer[4]){ 
+									echo "<td>" . $cat[1] . "</td>";
+									echo "<td>" . $cat[2] . "</td>";
+									echo "<td>" . $cat[3] . "</td>";
+									if ($cat[0] == 1){
+										echo "<td>" . $cat[2] * 1 . " руб.</td>";
+									} else{
+										echo "<td>" . $cat[2] * $quer[6] . " руб.</td>";
+									}
+								} /*Категория Цена Тариф Итого*/?>								
+							<?php 
+							}}
+							}else {		
+								
+								foreach ($query as $quer){	
+							?>
+								<tr>
+									<td><?= $quer[0] /*Номер*/?></td>
+									<td><?= $quer[2] /*Номер автомобиля*/?></td>
+									<td><?= $quer[3] /*Автомобиль*/?></td>
+									<td><?= $quer[7] /*Дата*/?></td>
+									<td><?= $quer[6] /*Кол-во суток*/?></td>
+							<?php 
+								foreach ($category as $cat){
+							?>
+								<? if ($cat[0] == $quer[4]){ 
+									echo "<td>" . $cat[1] . "</td>";
+									echo "<td>" . $cat[2] . "</td>";
+									echo "<td>" . $cat[3] . "</td>";
+									if ($cat[0] == 1){
+										echo "<td>" . $cat[2] * 1 . " руб.</td>";
+									} else{
+										echo "<td>" . $cat[2] * $quer[6] . " руб.</td>";
+									}
+								} /*Категория Цена Тариф Итого*/?>								
+							<?php 
+							}}}
+							?>	
+								</tr>
+						</tbody>
+
+
+
+
+
+
+
+<td> <?= $row['surname'], ' ',$row['name'], ' ',$row['patron'] /*ФИО*/ ?></td>
+
+
+Как изменить href ?
+<?php if (isset($_SESSION['logged_user'])): ?>
+    <a href="/auth/logout.php">Выход</a>
+<?php else: ?>
+    <a href="/auth/login.php">Вход</a>
+<?php endif ?>
+
+
+
+
+
+reg.php
+<?php
+session_start();
+//include("db_connect.php");
+$mysqli = new mysqli("omegatrak", "root", "", "register");
+if ($mysqli->connect_error) {
+    die('Ошибка : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
+}
+$surname = $_POST['surname'];
+$name = $_POST['name'];
+$patron = $_POST['patron'];
+$land = $_POST['land'];
+$tel = $_POST['tel'];
+$login = $_POST['login'];
+$pass = $_POST['pass'];
+//$P_pas = $_POST['P_pas'];
+
+
+$md5_pass = md5($pass);
+//$md5_P_pass = md5($P_pass);
+
+
+$query = mysqli_query($mysqli, "SELECT * FROM `users` WHERE `login`='{$login}'");
+if (mysqli_num_rows($query) == 0) {
+    $_SESSION['users'] = ['login' => $login];
+    mysqli_query($mysqli, "INSERT INTO `users` (`surname`, `name`, `patron`, `land`, `tel`, `login`, `pass`) VALUES('{$surname}', '{$name}', '{$patron}', '{$land}', '{$tel}', '{$login}', '{$md5_pass}')");
+    header("Location: user.php");
+} else {
+    echo("Ошибка: Данный логин занят другим пользователем");
+}
+/*/Выйти с авторизации легко. Делаешь кнопку где-либо, типо "Выйти". 
+Нажимая на кнопку, тебя перенаправляет на файл, например "logout.php". 
+В этом файле пишешь: "unset($_SESSION['user']);", а также переадрисовываешь, например, на главную страницу.
+/*/
+//
+$mysqli->close();
+?>
+
+
+db_connect.php(подключение через файл не работает)
+$mysqli = new mysqli("omegatrak", "root", "", "register");
+if ($mysqli->connect_error) {
+    die('Ошибка : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
+}
